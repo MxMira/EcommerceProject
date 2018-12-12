@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS `mydb`.`Users` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `full_name` VARCHAR(45) NOT NULL,
+  `mobile` CHAR(15) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  `role` ENUM('client', 'seller', 'admin', 'superadmin') NOT NULL DEFAULT 'client',
+  `created_by` INT NULL,
+  `status` ENUM('active', 'deactive', 'deleted', 'pending') NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
+  UNIQUE INDEX `mobile_UNIQUE` (`mobile` ASC),
+  INDEX `fk_Users_Users1_idx` (`created_by` ASC),
+  CONSTRAINT `fk_Users_Users1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `mydb`.`Users` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)

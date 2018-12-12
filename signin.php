@@ -6,7 +6,7 @@ $remember = '';
 $validinput = true;
 $querystring = '?';
 
-// if  there is a seesion already opened for this user
+// if  there is a session already opened for this user
 session_start();
 if (isset($_SESSION['inputEmail']) && isset($_SESSION['inputPassword'])) {
     $email = $_SESSION['inputEmail'];
@@ -36,16 +36,23 @@ if (isset($_SESSION['inputEmail']) && isset($_SESSION['inputPassword'])) {
 // if every input is set with a value
 if ($validinput == true) {
     require 'require/dbconn.php';
-    $stmt = $conn->prepare("select * from users where email=:email");
-    $stmt->execute(['email' => $email]);
-    $user = $stmt->fetch();
-    if ($user && password_verify($password, $user['password'])) {
-        $usID = $user['id'];
-        $usName = $user['full_name'];
-        $mail = $user['email'];
+    $stmt = $conn->prepare("select * from users where email=:email And password=:password");
+    $pass = md5($password);
+    $stmt->execute(['email' => $email, 'password'=>$pass]);
+    $arr = $stmt->fetch();
+    if ($arr) {
+        require 'userClass.php';
+        $user = new user();
+        $user->id = $arr['ID'];
+        $user->full_name = $arr['full_name'];
+        $user->email = $arr['email'];
+        $user->created_at = $arr['created_at'];
+        $user->created_by = $arr['created_by'];
+        $user->role = $arr['role'];
+        $user->status = $arr['status'];
+        $user->mobile = $arr['mobile'];
         $conn = null;
-        $_SESSION['uid'] = $usID;
-        $_SESSION['uname'] = $usName;
+        $_SESSION['user'] = serialize($user);
 
         if ($remember == 1) {
             setcookie('umailSourcyaTest', $mail, time() + 60 * 60 * 24 * 356);

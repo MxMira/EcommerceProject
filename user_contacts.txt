@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS `mydb`.`Contacts` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `type` ENUM('address', 'mail', 'phone', 'mobile') NOT NULL,
+  `contact` VARCHAR(45) NOT NULL,
+  `Users_ID` INT NOT NULL,
+  PRIMARY KEY (`ID`),
+  INDEX `fk_Contacts_Users_idx` (`Users_ID` ASC),
+  CONSTRAINT `fk_Contacts_Users`
+    FOREIGN KEY (`Users_ID`)
+    REFERENCES `mydb`.`Users` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
