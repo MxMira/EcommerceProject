@@ -1,7 +1,18 @@
 <?php
-session_start();
-if (isset($_SESSION['user'])) {
-    $user = unserialize($_SESSION['user']);
-} else {
-    header("location:index.php?msg=signin");
-}
+$pageName='dashboard';
+require 'header.php'
+?>
+**********************************************************************************************************************************************************
+        MAIN CONTENT
+***********************************************************************************************************************************************************
+    <!--main content start-->
+<div>asdasd</div>
+<div>asdasd</div>
+<div>asdasd</div>
+<div>asdasd</div>
+<div>asdasd</div>
+<div>asdasd</div>
+<div>asdasd</div>
+<div>asdasd</div>
+    <!--main content end-->
+<?php require 'footer.php'?>

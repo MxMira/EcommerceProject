@@ -51,17 +51,19 @@ if ($validinput == true) {
         $user->role = $arr['role'];
         $user->status = $arr['status'];
         $user->mobile = $arr['mobile'];
-        $conn = null;
         $_SESSION['user'] = serialize($user);
 
         if ($remember == 1) {
-            setcookie('umailSourcyaTest', $mail, time() + 60 * 60 * 24 * 356);
-            setcookie('upasswordSourcyaTest', $pass, time() + 60 * 60 * 24 * 356);
+            setcookie('mail', $user->email, time() + 60 * 60 * 24 );
+            $token = generateToken();
+            setcookie('token', $token, time() + 60 * 60 * 24 );
+            $stmt = $conn->prepare("update users set token=? where email=?");
+            $stmt->execute([$token,$user->email]);
+            $stmt->errorInfo();
         }
 
         header('location:mainpage.php');
     } else {
-        $conn = null;
         setcookie('umailSourcyaTest', NULL, time() - 3600);
         setcookie('upasswordSourcyaTest', NULL, time() - 3600);
         header('location:index.php?msg=invaliduser');
@@ -69,5 +71,15 @@ if ($validinput == true) {
 }else{
     header('location:index.php' . $querystring);
 }
-        
+$conn = null;
+
+function generateToken($charLen = 32){
+    $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+    $max = count($characters) - 1;
+    $str = '';
+    for ($i = 0; $i < $charLen; $i++) {
+        $str .= $characters[rand(0, $max - 1)];
+    }
+    return $str;
+}
         
