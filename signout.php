@@ -6,8 +6,9 @@ setcookie('token', null, time());
 
 require 'require/dbconn.php';
 require 'userClass.php';
+$user = unserialize($_SESSION['user']);
 $stmt = $conn->prepare("update users set token=? where email=?");
-$stmt->execute([null,$user->email]);
+$stmt->execute([null, $user->email]);
 $stmt->errorInfo();
 $conn = null;
 

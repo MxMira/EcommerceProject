@@ -66,6 +66,24 @@ if ($validinput == true) {
         $stmt2->execute([$fullname,$mobile,$email,$pass,$role,$status]);
         $stmt2->errorInfo();
         $conn = null;
+        // sending mail if pending
+        if($status == 'Pending'){
+            require_once 'phpmailer/send_email.php';
+            my_email(
+                "Hello,<br>
+                   Welcome to your new Ecommerce account.<br>
+                   You can log in right away and start using your new account.<br>
+                   Please take a moment to confirm your email address with us.<br>
+                   To confirm your email address, please click on the link below:<br>
+                   <a href='http://localhost:8080/newhorizon/project/index.php'>Redirect to Reset Password</a><br>
+                   Thank you,",
+                "Ecommerce@gmail.com",
+                "technical Support" ,
+                $email,
+                $fullname,
+                "Reset Password Ecommerce"
+            );
+        }
         header('location:manage.php?user=' . $fName);
     }
 } else {
